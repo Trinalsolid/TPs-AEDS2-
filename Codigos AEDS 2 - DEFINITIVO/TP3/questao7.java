@@ -404,6 +404,36 @@ class ListaDupla {
 		return tamanho;
 	}
 
+	public void Quicksort(int tamanho){
+		tamanho();
+	}
+
+	public void sort() {
+		quicksort(primeiro, ultimo);
+	}
+
+	private void quicksort(CelulaDupla esq, CelulaDupla dir) {
+        CelulaDupla i = esq, j = dir;
+		CelulaDupla pivo = new CelulaDupla();
+		pivo = primeiro;
+        while (i.elemento.getCorDoCabelo().compareTo(j.elemento.getCorDoCabelo()) <= 0) {
+            while (i.elemento.getCorDoCabelo().compareTo(pivo.elemento.getCorDoCabelo()) < 0 ) i = i.prox;
+            while (i.elemento.getCorDoCabelo().compareTo(pivo.elemento.getCorDoCabelo()) > 0) j= j.ant;
+            if (i.elemento.getCorDoCabelo().compareTo(j.elemento.getCorDoCabelo()) <= 0) {
+                swap(i,j);
+                i = i.prox;
+                j = j.ant;
+            }
+        }
+        if (esq.elemento.getCorDoCabelo().compareTo(j.elemento.getCorDoCabelo()) <= 0)  quicksort(esq, j);
+        if (i.elemento.getCorDoCabelo().compareTo(dir.elemento.getCorDoCabelo()) <= 0)  quicksort(i, dir);
+    }
+
+	public void swap(CelulaDupla i, CelulaDupla j) {
+		Personagem temp = i.elemento;
+		i.elemento = j.elemento;
+		j.elemento = temp;
+	 }
 	
 }
 
@@ -430,6 +460,7 @@ public class questao7{
 		   } catch (Exception e) {
 		   }
 		}
+		listaDupla.sort();
 		entrada1.close();
 		listaDupla.mostrar();   
 	}
