@@ -273,9 +273,9 @@ class ArvoreArvore{
     public void inserir(Personagem s, No i) throws Exception {
         if (i == null) {
             throw new Exception("Erro ao inserir: caractere invalido!");
-        } else if (s.getNome().charAt(0) < i.elemento) {
+        } else if (s.getAltura() % 15 < i.elemento) {
             inserir(s, i.esq);
-        } else if (s.getNome().charAt(0) > i.elemento) {
+        } else if (s.getAltura() % 15 > i.elemento) {
             inserir(s, i.dir);
         } else {
             i.outro = inserir(s, i.outro);
@@ -295,48 +295,42 @@ class ArvoreArvore{
         return i;
     }
 	
-    public String pesquisar(String elemento) {
-        boolean resp;
-        System.out.print("raiz ");
-        resp = pesquisar(raiz, elemento);
+    public boolean pesquisar(Personagem elemento) {
+		return pesquisar(raiz, elemento);
+	}
 
-        System.out.print(resp ? "SIM" : "NAO");;
+	private boolean pesquisar(No no, Personagem x) {
+		boolean resp;
+		if (no == null) { 
+			resp = false;
+		} else if (x.getAltura() % 15 < no.elemento) { 
+			resp = pesquisar(no.esq, x);
+			System.out.println("dir "); 
+		} else if (x.getAltura() % 15 > no.elemento) { 
+			resp = pesquisar(no.dir, x);
+			System.out.println("esq "); 
+		} else { 
+			resp = pesquisarSegundaArvore(no.outro, x); 
+		}
+		return resp;
+	}
 
-        return caminho;
-    }
+	private boolean pesquisarSegundaArvore(No2 no, Personagem x) {
+		boolean resp;
+		if (no == null) { 
+			resp = false;
+		} else if (x.getNome().compareTo(no.elemento.getNome()) < 0) { 
+			resp = pesquisarSegundaArvore(no.esq, x); 
+			System.out.println("ESQ ");
+		} else if (x.getNome().compareTo(no.elemento.getNome()) > 0) { 
+			resp = pesquisarSegundaArvore(no.dir, x);
+			System.out.println("DIR "); 
+		} else { 
+			resp = true; 
+		}
+		return resp;
+	}
 
-    private boolean pesquisar(No no, String x) {
-        boolean resp = false;
-        if (no != null) { 
-            resp = pesquisarSegundaArvore(no.outro, x);
-            if(resp == false){
-                System.out.print("ESQ ");
-                resp = pesquisar(no.esq, x);
-            }
-            if(resp == false){
-                System.out.print("DIR ");
-                resp = pesquisar(no.dir, x);
-            }
-        }
-        return resp;
-    }
-
-    private boolean pesquisarSegundaArvore(No2 no, String x) {
-        boolean resp = false;
-        if (no == null) { 
-            resp = false;
-        } else if (x.compareTo(no.elemento.getNome()) < no.elemento.getNome().compareTo(x)){
-            System.out.print("esq "); 
-            resp = pesquisarSegundaArvore(no.esq, x);
-        } else if (x.compareTo(no.elemento.getNome()) > no.elemento.getNome().compareTo(x)){
-            System.out.print("dir ");
-            resp = pesquisarSegundaArvore(no.dir, x);
-        }else{
-            resp = true;
-        }
-
-        return resp;
-    }
 }
 
 

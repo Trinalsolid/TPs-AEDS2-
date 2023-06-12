@@ -187,93 +187,80 @@ class Personagem {
 
 }
 
-class HashDiretoReserva {
+class HashReserva{
+	Personagem tabela[];
+	int m1, m2, m, reserva;
+	final int NULO = -1;
+ 
+	public HashReserva() {
+	   this(21, 9);
+	}
+ 
+	public HashReserva(int m1, int m2) {
+		this.m1 = m1;
+		this.m2 = m2;
+		this.m = m1 + m2;
+		this.tabela = new Personagem[this.m];
+		for (int i = 0; i < m1; i++) {
+			tabela[i] = null;
+		}
+		reserva = 0;
+	}
+ 
+	public int h(int elemento) {
+	   return elemento % m1;
+	}
+ 
+	public boolean inserir(Personagem elemento) {
+		boolean resp = false;
+		if (elemento != null) {
+			int pos = h(elemento.getAltura());
+			if (tabela[pos] == null) {
+				tabela[pos] = elemento;
+				resp = true;
+			} else if (reserva < m2) {
+				tabela[m1 + reserva] = elemento;
+				reserva++;
+				resp = true;
+			}
+		}
+	   	return resp;
+	}
 
-    private Personagem[] pesoal;
-    int m1, m2, m, reserva;
-    private int n;
-    
-    public HashDiretoReserva(int m1, int m2) {
-        this.m1 = m1;
-        this.m2 = m2;
-        this.m = m1 + m2;
-        pesoal = new Personagem[m];
-        for (int i = 0; i < m1; i++) {
-            pesoal[i] = new Personagem();
+	public boolean pesquisar(String linha) {
+		boolean resp = false;
+		int ascii = 0;
+
+		for (int i = 0; i < linha.length(); i++) {
+			ascii = ascii + (int)linha.charAt(i);
+		}
+		int pos = h(ascii);
+
+		if (tabela[pos] != null && tabela[pos].getNome().compareTo(linha) == 0) {
+			resp = true;  
+		} else {
+			for (int i = 0; i < reserva; i++) {
+				if (tabela[m1 + i].getNome().compareTo(linha) == 0) {
+					resp = true;
+					i = reserva;
+				}
+			}
+		}
+
+		return resp;
+	}
+
+	public int getValorAscii(Personagem elemento) {
+        int ascii = 0;
+        String nome = elemento.getNome();
+
+        for (int i = 0; i < nome.length(); i++) {
+            ascii = ascii + (int) nome.charAt(i);
         }
-        reserva = 0;
-        n = 0;
-    }
-    
-    public HashDiretoReserva() {
-        this(21, 9);
+
+        return ascii;
     }
 
-    public int h(int elemento) {
-        return elemento % m;
-     }
-    
-    public int hash(String elemento) {
-        int num = 0;
-        for (int i = 0; i < elemento.length(); i++) {
-            num += elemento.charAt(i);
-        }
-        return num % this.m1;
-    }
-    
-    /**
-     * Retorna o tamanho total da lista
-     * @return
-     */
-    public int getTamanho() {
-        return pesoal.length;
-    }
-    
-    public boolean inserir(Personagem elemento) throws Exception {
-        if (n >= this.m) {
-            throw new Exception("ERRO");
-        }
-        boolean resp = false;
-        if (elemento != null) {
-            int pos = hash(elemento.getNome());
-            if (pesoal[pos] == null) {
-                pesoal[pos] = elemento;
-                resp = true;
-                n++;
-            } else if (reserva < m2) {
-                pesoal[m1 + reserva] = elemento;
-                reserva++;
-                resp = true;
-                n++;
-            }
-        }
-        return resp;
-    }
-
-    Personagem remover(Personagem elemento) throws Exception {
-        if (n == 0) {
-            throw new Exception("ERRO");
-        }
-        Personagem povo = pesoal[0];
-        return povo;
-    }
-
-    public boolean pesquisar(String linha) {
-        boolean resp = false;
-        int pos = hash(linha);
-    
-        if(pesoal[pos].getNome().equals(linha)) {
-            resp = true;
-        } else if (pesoal[pos] != null) {
-            for (int i = 0; i < reserva; i++) {
-                if (pesoal[m1 + i].getNome().equals(linha)) {
-                    resp = true;
-                    i = reserva;
-                }
-            }
-        }
-        return resp;
-    }
 }
 
 public class questao5{
@@ -294,7 +281,7 @@ public class questao5{
             numentrada++;
         } while (isFim(aux2) == false);
         numentrada--;
-        HashDiretoReserva tabelahash = new HashDiretoReserva();
+        HashReserva tabelahash = new HashReserva();
         for(int i=0;i<numentrada;i++){
            Personagem aux = new Personagem();
 			try {
@@ -304,18 +291,20 @@ public class questao5{
 			}
         }
         numentrada++;
+
+		// segunda parta de leitura
   
-        String entrada2 = "";
+	    String entrada2 = "";
         boolean saida = false; 
         do{
             entrada2 = entrada1.nextLine();
             if(isFim(entrada2) == false){
-                MyIO.println(""+entrada2);
+                MyIO.print(""+entrada2);
                 saida = tabelahash.pesquisar(entrada2);
                 if(saida == false){
-                    MyIO.println("NÃO");
+                    MyIO.print(" NÃO\n");
                 }else{
-                    MyIO.println("SIM"); 
+                    MyIO.print(" SIM\n"); 
                 }
             }
         }while(isFim(entrada2) == false);

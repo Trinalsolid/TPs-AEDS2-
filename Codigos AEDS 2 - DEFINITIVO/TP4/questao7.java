@@ -191,249 +191,247 @@ class Celula {
 	public Personagem elemento; // Elemento inserido na celula.
 	public Celula prox; // Aponta a celula prox.
 
+
 	/**
 	 * Construtor da classe.
-	 * @param elemento Elemento inserido na celula.
 	 */
-	Celula(Personagem elemento) {
-		this.elemento = elemento;
-		this.prox = null;
+	public Celula() {
+		
 	}
 
 	/**
 	 * Construtor da classe.
-	 * @param elemento Elemento inserido na celula.
-	 * @param prox Aponta a celula prox.
+	 * @param elemento int inserido na celula.
 	 */
-	Celula(Personagem elemento, Celula prox) {
-		this.elemento = elemento;
-		this.prox = prox;
+	public Celula(Personagem elemento) {
+      this.elemento = elemento;
+      this.prox = null;
 	}
 }
 
-/**
- * Lista dinamica simplesmente encadeada
- * @author Joao Paulo Domingos Silva
- * @version 1.1 02/2012
- */
 class Lista {
-	private Celula primeiro; // Primeira celula: SEM elemento valido.
-	private Celula ultimo; // Ultima celula: COM elemento valido.
+	private Celula primeiro;
+	private Celula ultimo;
+
 
 	/**
-	 * Construtor da classe: Instancia uma celula (primeira e ultima).
+	 * Construtor da classe que cria uma lista sem elementos (somente no cabeca).
 	 */
 	public Lista() {
-		primeiro = new Celula(new Personagem());
+		primeiro = new Celula();
 		ultimo = primeiro;
 	}
 
-	/**
-	 * Mostra os elementos separados por espacos.
-	 */
-	public void mostrar() {
-		System.out.print("[ "); // Comeca a mostrar.
-		for (Celula i = primeiro.prox; i != null; i = i.prox) {
-			System.out.print(i.elemento + " ");
-		}
-		System.out.println("] "); // Termina de mostrar.
-	}
 
 	/**
-	 * Procura um elemento e retorna se ele existe.
-	 * @param x Elemento a pesquisar.
-	 * @return <code>true</code> se o elemento existir,
-	 * <code>false</code> em caso contrario.
+	 * Insere um elemento na primeira posicao da lista.
+    * @param x int elemento a ser inserido.
 	 */
-	public boolean pesquisar(String x) {
-		boolean retorno = false;
-		for (Celula i = primeiro.prox; i != null; i = i.prox) {
-			if(i.elemento.getNome().compareTo(x) == 0){
-				retorno = true;
-				i = ultimo;
-			}
-		}
-		return retorno;
-	}
-
-	/**
-	 * Insere um elemento na primeira posicao da sequencia.
-	 * @param elemento Elemento a inserir.
-	 */
-	public void inserirInicio(Personagem elemento) {
-		Celula tmp = new Celula(elemento);
+	public void inserirInicio(Personagem x) {
+		Celula tmp = new Celula(x);
       	tmp.prox = primeiro.prox;
 		primeiro.prox = tmp;
-		if (primeiro == ultimo) {
+		if (primeiro == ultimo) {                 
 			ultimo = tmp;
 		}
       	tmp = null;
 	}
 
+
 	/**
-	 * Insere um elemento na ultima posicao da sequencia.
-	 * @param elemento Elemento a inserir.
+	 * Insere um elemento na ultima posicao da lista.
+    * @param x int elemento a ser inserido.
 	 */
-	public void inserirFim(Personagem elemento) {
-		Celula tmp = new Celula(elemento);
-		ultimo.prox = tmp;
+	public void inserirFim(Personagem x) {
+		ultimo.prox = new Celula(x);
 		ultimo = ultimo.prox;
-      	tmp = null;
 	}
 
-	/**
-	 * Insere elemento em um indice especifico.
-	 * Considera que primeiro elemento esta no indice 0.
-	 * @param x Elemento a inserir.
-	 * @param posicao Meio da insercao.
-	 * @throws Exception Se <code>posicao</code> for incorreta.
-	 */
-  	 public void inserirMeio(Personagem x, int posicao) throws Exception {
-		Celula i;
-		int cont;
-
-		// Caminhar ate chegar na posicao anterior a insercao
-      	for(i = primeiro, cont = 0; (i.prox != ultimo && cont < posicao); i = i.prox, cont++);
-		
-		// Se indice for incorreto:
-		if (posicao < 0 || posicao > cont + 1) {
-			throw new Exception("Erro ao inserir (posicao " + posicao + "(cont = " + cont + ") invalida)!");
-
-		} else if (posicao == cont + 1) {
-			inserirFim(x);
-		}else{
-			Celula tmp = new Celula(x);
-			tmp.prox = i.prox;
-			i.prox = tmp;
-			tmp = i = null;
-		}
-   	}
 
 	/**
-	 * Remove um elemento da primeira posicao da sequencia.
-	 * @return Elemento removido.
-	 * @throws Exception Se a sequencia nao contiver elementos.
+	 * Remove um elemento da primeira posicao da lista.
+    * @return resp int elemento a ser removido.
+	 * @throws Exception Se a lista nao contiver elementos.
 	 */
 	public Personagem removerInicio() throws Exception {
-		Personagem resp = new Personagem();
-
 		if (primeiro == ultimo) {
 			throw new Exception("Erro ao remover (vazia)!");
-		}else{
-			primeiro = primeiro.prox;
-			resp = primeiro.elemento;
 		}
 
+        Celula tmp = primeiro;
+		primeiro = primeiro.prox;
+		Personagem resp = primeiro.elemento;
+        tmp.prox = null;
+        tmp = null;
+		return resp;
+	}
+
+
+	/**
+	 * Remove um elemento da ultima posicao da lista.
+    * @return resp int elemento a ser removido.
+	 * @throws Exception Se a lista nao contiver elementos.
+	 */
+	public Personagem removerFim() throws Exception {
+		if (primeiro == ultimo) {
+			throw new Exception("Erro ao remover (vazia)!");
+		} 
+
+		// Caminhar ate a penultima celula:
+      Celula i;
+      for(i = primeiro; i.prox != ultimo; i = i.prox);
+
+      Personagem resp = ultimo.elemento; 
+      ultimo = i; 
+      i = ultimo.prox = null;
+      
 		return resp;
 	}
 
 	/**
-	 * Remove um elemento da ultima posicao da sequencia.
-	 * @return Elemento removido.
-	 * @throws Exception Se a sequencia nao contiver elementos.
+    * Insere um elemento em uma posicao especifica considerando que o 
+    * primeiro elemento valido esta na posicao 0.
+    * @param x int elemento a ser inserido.
+	 * @param pos int posicao da insercao.
+	 * @throws Exception Se <code>posicao</code> invalida.
 	 */
-	public Personagem removerFim() throws Exception {
-		Personagem resp =  new Personagem();
-      	Celula i = null;
+   
+    public void inserir(Personagem x, int pos) throws Exception {
 
-		if (primeiro == ultimo) {
+      int tamanho = tamanho();
+
+      if(pos < 0 || pos > tamanho){
+			throw new Exception("Erro ao inserir posicao (" + pos + " / tamanho = " + tamanho + ") invalida!");
+      } else if (pos == 0){
+         inserirInicio(x);
+      } else if (pos == tamanho){
+         inserirFim(x);
+      } else {
+		   // Caminhar ate a posicao anterior a insercao
+         Celula i = primeiro;
+         for(int j = 0; j < pos; j++, i = i.prox);
+		
+         Celula tmp = new Celula(x);
+         tmp.prox = i.prox;
+         i.prox = tmp;
+         tmp = i = null;
+      }
+    }
+
+	/**
+    * Remove um elemento de uma posicao especifica da lista
+    * considerando que o primeiro elemento valido esta na posicao 0.
+	 * @param posicao Meio da remocao.
+    * @return resp int elemento a ser removido.
+	 * @throws Exception Se <code>posicao</code> invalida.
+	 */
+	public Personagem remover(int pos) throws Exception {
+        Personagem resp;
+        int tamanho = tamanho();
+
+		if (primeiro == ultimo){
 			throw new Exception("Erro ao remover (vazia)!");
-		} else {
 
-         resp = ultimo.elemento;
-
-		   // Caminhar ate a penultima celula:
-         for(i = primeiro; i.prox != ultimo; i = i.prox);
-
-         ultimo = i;
-         i = ultimo.prox = null;
+        } else if(pos < 0 || pos >= tamanho){
+			throw new Exception("Erro ao remover (posicao " + pos + " / " + tamanho + " invalida!");
+        } else if (pos == 0){
+            resp = removerInicio();
+        } else if (pos == tamanho - 1){
+            resp = removerFim();
+        } else {
+		   // Caminhar ate a posicao anterior a insercao
+         Celula i = primeiro;
+         for(int j = 0; j < pos; j++, i = i.prox);
+		
+         Celula tmp = i.prox;
+         resp = tmp.elemento;
+         i.prox = tmp.prox;
+         tmp.prox = null;
+         i = tmp = null;
       }
 
 		return resp;
 	}
 
 	/**
-	 * Remove elemento de um indice especifico.
-	 * Considera que primeiro elemento esta no indice 0.
-	 * @param posicao Meio da remocao.
-	 * @return Elemento removido.
-	 * @throws Exception Se <code>posicao</code> for incorreta.
+	 * Mostra os elementos da lista separados por espacos.
 	 */
-	public Personagem removerMeio(int posicao) throws Exception {
-		Celula i;
-		Personagem resp = new Personagem();
+	public void mostrar() {
+		int j = 0;
+        for (Celula i = primeiro.prox; i != null; i = i.prox ) {
+            System.out.print("["+j+"] ");
+			System.out.print(i.elemento + "\n");
+            j++;
+		}
+	}
 
-		int cont;
+	/**
+	 * Calcula e retorna o tamanho, em numero de elementos, da lista.
+	 * @return resp int tamanho
+	 */
+    public int tamanho() {
+        int tamanho = 0; 
+        for(Celula i = primeiro; i != ultimo; i = i.prox, tamanho++);
+        return tamanho;
+    }
 
-			if (primeiro == ultimo){
-				throw new Exception("Erro ao remover (vazia)!");
-		}else{
-
-			// Caminhar ate chegar na posicao anterior a insercao
-			for(i = primeiro, cont = 0; (i.prox != ultimo && cont < posicao); i = i.prox, cont++);
-
-			// Se indice for incorreto:
-			if (posicao < 0 || posicao > cont + 1) {
-				throw new Exception("Erro ao remover (posicao " + posicao + " invalida)!");
-
-			} else if (posicao == cont + 1) {
-				resp = removerFim();
-			}else{
-				Celula tmp = i.prox;
-				resp = tmp.elemento;
-				i.prox = tmp.prox;
-				tmp.prox = null;
-				i = tmp = null;
+	public boolean pesquisar(String x) {
+		boolean resp = false;
+		for (Celula i = primeiro.prox; i != null; i = i.prox) {
+			if(i.elemento.getNome().compareTo(x) == 0){
+				resp = true;
+				i = ultimo;
 			}
 		}
-
 		return resp;
 	}
 }
 
-
 class HashIndiretoLista {
-    Lista tabela[];
-    int tamanho;
-    final Personagem NULO = new Personagem();
- 
-    public HashIndiretoLista() {
-       this(21);
-    }
- 
-    public HashIndiretoLista(int tamanho) {
-       this.tamanho = tamanho;
-       tabela = new Lista[tamanho];
-       for (int i = 0; i < tamanho; i++) {
-          tabela[i] = new Lista();
-       }
-    }
- 
-    public int h(int elemento) {
-       return elemento % tamanho;
-    }
- 
-    boolean pesquisar(String elemento) {
-		int soma = 0;
-		for(int i = 0; i < elemento.length(); i++){
-				soma = soma + (int) elemento.charAt(i);
+	Lista tabela[];
+	int tamanho;
+	final int NULO = -1;
+
+	public HashIndiretoLista() {
+		this(25);
+	}
+
+	public HashIndiretoLista(int tamanho) {
+		this.tamanho = tamanho;
+		tabela = new Lista[tamanho];
+		for (int i = 0; i < tamanho; i++) {
+			tabela[i] = new Lista();
 		}
-		int pos = h(soma);
-		if(tabela[pos].pesquisar(elemento) == true){
-			System.out.println("" + pos);
-		}
+	}
+
+	public int h(int elemento) {
+		return elemento % tamanho;
+	}
+
+	boolean pesquisar(String elemento) {
+		int ascii = 0;
+        for (int i = 0; i < elemento.length(); i++) {
+            ascii = ascii + (int) elemento.charAt(i);
+        }
+        int pos = h(ascii);
        	return tabela[pos].pesquisar(elemento);
+	}
+
+	public int getValorAscii(Personagem elemento) {
+        int ascii = 0;
+        String nome = elemento.getNome();
+        for (int i = 0; i < nome.length(); i++) {
+            ascii = ascii + (int) nome.charAt(i);
+        }
+
+        return ascii;
     }
- 
-    public void inserirInicio(Personagem elemento) {
-        int soma = 0;
-		for(int i = 0; i < elemento.getAltura(); i++){
-			soma = soma + elemento.getAltura();
-		}
-		int pos = h(soma);
+
+	public void inserirInicio(Personagem elemento) {
+		int pos = h(elemento.getAltura());
 		tabela[pos].inserirInicio(elemento);
-    }
- 
+	}
+
 }
 
 public class questao7{
@@ -454,30 +452,32 @@ public class questao7{
             numentrada++;
         } while (isFim(aux2) == false);
         numentrada--;
-        HashIndiretoLista hashcomlista = new HashIndiretoLista();
+        HashIndiretoLista tabelahash = new HashIndiretoLista();
         for(int i=0;i<numentrada;i++){
            Personagem aux = new Personagem();
 			try {
 				aux.ler(entrada[i]);
-				hashcomlista.inserirInicio(aux);
+				tabelahash.inserirInicio(aux);
 			} catch (Exception e) {
 			}
         }
         numentrada++;
+
+		// segunda parta de leitura
   
-        String entrada2 = "";
+	    String entrada2 = "";
         boolean saida = false; 
         do{
             entrada2 = entrada1.nextLine();
             if(isFim(entrada2) == false){
-                System.out.println(""+entrada2);
-                saida = hashcomlista.pesquisar(entrada2);
+                MyIO.print(""+entrada2);
+                saida = tabelahash.pesquisar(entrada2);
                 if(saida == false){
-                    MyIO.println("NÃO");
+                    MyIO.print(" NÃO\n");
                 }else{
-                    MyIO.println("SIM"); 
+                    MyIO.print(" SIM\n"); 
                 }
-             }
+            }
         }while(isFim(entrada2) == false);
         
         entrada1.close();
