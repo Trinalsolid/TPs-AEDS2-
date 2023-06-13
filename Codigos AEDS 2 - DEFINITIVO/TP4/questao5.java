@@ -188,7 +188,7 @@ class Personagem {
 }
 
 class HashReserva{
-	Personagem tabela[];
+	Personagem[] tabela;
 	int m1, m2, m, reserva;
 	final int NULO = -1;
  
@@ -200,7 +200,7 @@ class HashReserva{
 		this.m1 = m1;
 		this.m2 = m2;
 		this.m = m1 + m2;
-		this.tabela = new Personagem[this.m];
+		this.tabela = new Personagem[m];
 		for (int i = 0; i < m1; i++) {
 			tabela[i] = null;
 		}
@@ -224,42 +224,31 @@ class HashReserva{
 				resp = true;
 			}
 		}
-	   	return resp;
+
+        return resp;
 	}
 
-	public boolean pesquisar(String linha) {
+	public boolean mostrar(){
 		boolean resp = false;
-		int ascii = 0;
-
-		for (int i = 0; i < linha.length(); i++) {
-			ascii = ascii + (int)linha.charAt(i);
+		for(int i = 0 ; i < m ; i++){
+			System.out.print(""+tabela[i]);
 		}
-		int pos = h(ascii);
+		return resp;
+	}
 
-		if (tabela[pos] != null && tabela[pos].getNome().compareTo(linha) == 0) {
-			resp = true;  
-		} else {
-			for (int i = 0; i < reserva; i++) {
-				if (tabela[m1 + i].getNome().compareTo(linha) == 0) {
-					resp = true;
-					i = reserva;
-				}
+	public boolean pesquisar(String linha){
+		boolean resp = false;
+		for(int i = 0; i < m ; i++){
+			if(tabela[i] != null && tabela[i].getNome().compareTo(linha) == 0){
+				resp = true;
+				break;
+			}else{
+				resp = false;
 			}
 		}
 
 		return resp;
 	}
-
-	public int getValorAscii(Personagem elemento) {
-        int ascii = 0;
-        String nome = elemento.getNome();
-
-        for (int i = 0; i < nome.length(); i++) {
-            ascii = ascii + (int) nome.charAt(i);
-        }
-
-        return ascii;
-    }
 
 }
 

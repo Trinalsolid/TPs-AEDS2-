@@ -188,24 +188,23 @@ class Personagem {
 }
 
 class No {
-	public char elemento;
+	public Personagem elemento;
 	public final int tamanho = 255;
 	public No[] prox;
 	public boolean folha;
 	
 	public No (){
-		this(' ');
 	}
 
-	public No (char elemento){
+	public No (Personagem elemento){
 		this.elemento = elemento;
 		prox = new No [tamanho];
 		for (int i = 0; i < tamanho; i++) prox[i] = null;
 		folha = false;
 	}
 
-	public static int hash (char x){
-		return (int)x;
+	public static int hash (Personagem x){
+		return (int)x.getNome();
 	}
 }
 
@@ -235,13 +234,13 @@ class ArvoreTrie {
         return resp;
     }
 
-    public void inserir(String s) throws Exception {
-        inserir(s, raiz, 0);
+    public void inserir(Personagem elemento) throws Exception {
+        inserir(elemento, raiz, 0);
     }
 
-    private void inserir(String s, No no, int i) throws Exception {
-        System.out.print("\nEM NO(" + no.elemento + ") (" + i + ")");
-        if(no.prox[s.charAt(i)] == null){
+    private void inserir(Personagem elemento, No no) throws Exception {
+        //System.out.print("\nEM NO(" + no.elemento + ") (" + i + ")");
+        if(no.prox[elemento] == null){
             System.out.print("--> criando filho(" + s.charAt(i) + ")");
             no.prox[s.charAt(i)] = new No(s.charAt(i));
 
@@ -317,20 +316,48 @@ public class questao8{
             numentrada++;
         } while (isFim(aux2) == false);
         numentrada--;
-        HashReserva tabelahash = new HashReserva();
+        ArvoreTrie arvotretrie1 = new ArvoreTrie();
         for(int i=0;i<numentrada;i++){
            Personagem aux = new Personagem();
 			try {
 				aux.ler(entrada[i]);
-				tabelahash.inserir(aux);
+				arvotretrie1.inserir(aux);
 			} catch (Exception e) {
 			}
         }
         numentrada++;
 
 		// segunda parta de leitura
+
+		String[] entrada2 = new String[1000];
+        int numentrada2 = 0;
+        String aux3 = "";
+        Scanner novaentrada = new Scanner(System.in);
+        
+        do {
+            entrada2[numentrada2] = entrada1.nextLine();
+            aux3 = entrada[numentrada2];
+            numentrada2++;
+        } while (isFim(aux3) == false);
+        numentrada2--;
+        ArvoreTrie arvotretrie2 = new ArvoreTrie();
+        for(int i=0;i<numentrada;i++){
+           Personagem aux = new Personagem();
+			try {
+				aux.ler(entrada[i]);
+				arvotretrie2.inserir(aux);
+			} catch (Exception e) {
+			}
+        }
+        numentrada2++;
+
+		// merge das duas TRIES em uma unica
+		
+		ArvoreTrie arvore3 = new ArvoreTrie();
+
+		// terceira parte da leitura
   
-	    String entrada2 = "";
+	    String novaentrada2 = "";
         boolean saida = false; 
         do{
             entrada2 = entrada1.nextLine();

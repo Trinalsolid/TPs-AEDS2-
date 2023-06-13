@@ -232,32 +232,17 @@ class HashComRehash {
 
 	public boolean pesquisar(String elemento) {
 		boolean resp = false;
-        int ascii = 0;
-        for (int i = 0; i < elemento.length(); i++) {
-            ascii = ascii + (int)elemento.charAt(i);
-        }
-        int pos = h(ascii);
-        if (tabela[pos] != null && tabela[pos].getNome().compareTo(elemento) == 0) {
-            resp = true;
-        }else{
-            pos = reh(ascii);
-            if (tabela[pos] != null && tabela[pos].getNome().compareTo(elemento) == 0) {
-                resp = true;
-            }
-        }     
-        return resp;
+		for(int i = 0; i < m ; i++){
+			if(tabela[i] != null && tabela[i].getNome().compareTo(elemento) == 0){
+				resp = true;
+				break;
+			}else{
+				resp = false;
+			}
+		}
+
+		return resp;
 	}
-
-	public int getValorAscii(Personagem elemento) {
-        int ascii = 0;
-        String nome = elemento.getNome();
-
-        for (int i = 0; i < nome.length(); i++) {
-            ascii = ascii + (int) nome.charAt(i);
-        }
-
-        return ascii;
-    }
 }
 
 public class questao6{

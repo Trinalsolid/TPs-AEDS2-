@@ -408,24 +408,16 @@ class HashIndiretoLista {
 		return elemento % tamanho;
 	}
 
-	boolean pesquisar(String elemento) {
-		int ascii = 0;
-        for (int i = 0; i < elemento.length(); i++) {
-            ascii = ascii + (int) elemento.charAt(i);
-        }
-        int pos = h(ascii);
-       	return tabela[pos].pesquisar(elemento);
+	public boolean pesquisar(String elemento) {
+		boolean resp = false;
+        for(int i = 0 ; i < tamanho ; i++){
+			resp = tabela[i].pesquisar(elemento);
+			if(resp == true){
+				break;
+			}
+		}
+       	return resp;
 	}
-
-	public int getValorAscii(Personagem elemento) {
-        int ascii = 0;
-        String nome = elemento.getNome();
-        for (int i = 0; i < nome.length(); i++) {
-            ascii = ascii + (int) nome.charAt(i);
-        }
-
-        return ascii;
-    }
 
 	public void inserirInicio(Personagem elemento) {
 		int pos = h(elemento.getAltura());
